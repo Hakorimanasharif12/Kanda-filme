@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanda Filme - Watch Movies Online</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header with Language Selector -->
+    <header>
+        <nav>
+            <div class="logo">
+                <h1>Kanda Filme</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active" data-translate="home">Home</a>
+                <a href="movies.html" data-translate="movies">Movies</a>
+                <a href="categories.html" data-translate="categories">Categories</a>
+                <a href="about.html" data-translate="about">About</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search movies..." data-translate="searchPlaceholder">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="language-selector">
+                <select id="language-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="rw">Kinyarwanda</option>
+                    <option value="fr">Français</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section with Slideshow -->
+    <section class="hero">
+        <div class="slideshow">
+            <div class="slide active">
+                <img src="images/movie1.jpg" alt="Movie 1">
+                <div class="slide-content">
+                    <h2>Black Panther: Wakanda Forever</h2>
+                    <p data-translate="movie1Desc">Experience the next chapter of the Wakandan legacy</p>
+                    <button class="watch-now" data-translate="watchNow">Watch Now</button>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="images/movie2.jpg" alt="Movie 2">
+                <div class="slide-content">
+                    <h2>Avengers: Endgame</h2>
+                    <p data-translate="movie2Desc">The epic conclusion to the Infinity Saga</p>
+                    <button class="watch-now" data-translate="watchNow">Watch Now</button>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="images/movie3.jpg" alt="Movie 3">
+                <div class="slide-content">
+                    <h2>Spider-Man: No Way Home</h2>
+                    <p data-translate="movie3Desc">The multiverse unleashed</p>
+                    <button class="watch-now" data-translate="watchNow">Watch Now</button>
+                </div>
+            </div>
+            <button class="slide-arrow prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="slide-arrow next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+        <h2 data-translate="categories">Categories</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <i class="fas fa-fire"></i>
+                <h3 data-translate="action">Action</h3>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-heart"></i>
+                <h3 data-translate="romance">Romance</h3>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-theater-masks"></i>
+                <h3 data-translate="drama">Drama</h3>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-child"></i>
+                <h3 data-translate="animation">Animation</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Movies Section -->
+    <section class="featured-movies">
+        <h2 data-translate="featuredMovies">Featured Movies</h2>
+        <div class="movie-grid">
+            <!-- Movies will be added via JavaScript -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Kanda Filme</h3>
+                <p data-translate="footerDesc">Your ultimate destination for online movies</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-translate="quickLinks">Quick Links</h3>
+                <ul>
+                    <li><a href="index.html" data-translate="home">Home</a></li>
+                    <li><a href="movies.html" data-translate="movies">Movies</a></li>
+                    <li><a href="categories.html" data-translate="categories">Categories</a></li>
+                    <li><a href="about.html" data-translate="about">About</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 data-translate="contactUs">Contact Us</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> <span data-translate="email">info@kandafilme.com</span></li>
+                    <li><i class="fas fa-phone"></i> <span data-translate="phone">+250 123 456 789</span></li>
+                    <li><i class="fas fa-map-marker-alt"></i> <span data-translate="address">Kigali, Rwanda</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 KandaFilme. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

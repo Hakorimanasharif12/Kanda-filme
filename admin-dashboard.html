@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanda Filme - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="admin-dashboard">
+        <h1>Admin Dashboard</h1>
+        
+        <div class="movie-management">
+            <h2>Add New Movie</h2>
+            <form id="add-movie-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="movie-title">Movie Title</label>
+                    <input type="text" id="movie-title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-description">Description</label>
+                    <textarea id="movie-description" name="description" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-category">Category</label>
+                    <select id="movie-category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="action">Action</option>
+                        <option value="drama">Drama</option>
+                        <option value="comedy">Comedy</option>
+                        <option value="thriller">Thriller</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-poster">Movie Poster Image</label>
+                    <input type="file" id="movie-poster" name="poster" accept="image/*" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-video">Movie Video (MP4)</label>
+                    <input type="file" id="movie-video" name="video" accept="video/mp4" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-trailer">Trailer URL (Optional)</label>
+                    <input type="url" id="movie-trailer" name="trailer">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Add Movie</button>
+            </form>
+        </div>
+        
+        <div class="movie-list">
+            <h2>Current Movies</h2>
+            <table id="movies-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="movies-list-body">
+                    <!-- Movies will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <button id="logout-btn">Logout</button>
+    </div>
+
+    <script>
+        // Authentication check
+        document.addEventListener('DOMContentLoaded', () => {
+            const adminToken = localStorage.getItem('adminToken');
+            if (!adminToken) {
+                // Redirect to login if no token
+                window.location.href = 'admin-login.html';
+            }
+
+            // Add logout functionality
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'admin-login.html';
+                });
+            }
+        });
+    </script>
+
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

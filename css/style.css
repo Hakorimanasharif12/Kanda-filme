@@ -1209,3 +1209,34 @@ footer {
         width: 100%;
     }
 }
+
+/* WhatsApp Chat Button Styles */
+.whatsapp-chat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.whatsapp-btn {
+    background-color: #25D366;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+    background-color: #128C7E;
+    transform: scale(1.05);
+}
+
+.whatsapp-btn i {
+    margin-right: 10px;
+    font-size: 24px;
+}

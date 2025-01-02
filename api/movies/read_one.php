@@ -1,7 +1,10 @@
 <?php
 // Headers
 header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Headers: access");
+header("Access-Control-Allow-Methods: GET");
+header("Access-Control-Allow-Credentials: true");
+header('Content-Type: application/json');
 
 // Include database and movie object
 include_once '../../config/database.php';
@@ -15,28 +18,21 @@ $movie = new Movie($db);
 // Set movie ID
 $movie->movie_id = isset($_GET['id']) ? $_GET['id'] : die();
 
-// Read the details of movie to be edited
-if($movie->readOne()) {
-    // Create array
-    $movie_arr = array(
-        "movie_id" => $movie->movie_id,
-        "title" => array(
-            "en" => $movie->title_en,
-            "fr" => $movie->title_fr,
-            "rw" => $movie->title_rw
-        ),
-        "description" => array(
-            "en" => $movie->description_en,
-            "fr" => $movie->description_fr,
-            "rw" => $movie->description_rw
-        ),
-        "poster_image" => $movie->poster_image,
-        "backdrop_image" => $movie->backdrop_image,
-        "trailer_url" => $movie->trailer_url,
-        "release_year" => $movie->release_year,
-        "rating" => $movie->rating,
-        "views" => $movie->views,
-        "duration" => $movie->duration
+// Read the details of a specific movie
+$stmt = $movie->readOne();
+
+if($stmt->rowCount() > 0) {
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // Create movie details array
+    $movie_details = array(
+        "movie_id" => $row['movie_id'],
+        "title_en" => $row['title_en'],
+        "description_en" => $row['description_en'],
+        "category" => $row['category'],
+        "poster_image" => $row['poster_image'],
+        "video_file" => $row['video_file'],
+        "trailer_url" => $row['trailer_url']
     );
 
     // Get similar movies
@@ -57,7 +53,7 @@ if($movie->readOne()) {
         array_push($similar_movies, $similar_movie);
     }
 
-    $movie_arr["similar_movies"] = $similar_movies;
+    $movie_details["similar_movies"] = $similar_movies;
 
     // Increment view count
     $movie->incrementViews();
@@ -66,7 +62,7 @@ if($movie->readOne()) {
     http_response_code(200);
 
     // Make it json format
-    echo json_encode($movie_arr);
+    echo json_encode($movie_details);
 } else {
     // Set response code - 404 Not found
     http_response_code(404);

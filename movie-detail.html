@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details - Kanda Filme</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .movie-detail-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+        }
+        .movie-poster {
+            flex: 1;
+            margin-right: 30px;
+        }
+        .movie-poster img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .movie-info {
+            flex: 2;
+        }
+        .watch-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        #similar-movies {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+        .similar-movie-card {
+            width: 200px;
+            text-align: center;
+            margin: 10px;
+        }
+        .similar-movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="movie-detail-container">
+        <div class="movie-poster" id="movie-poster">
+            <!-- Poster will be dynamically loaded -->
+        </div>
+        <div class="movie-info" id="movie-info">
+            <!-- Movie details will be dynamically loaded -->
+        </div>
+    </div>
+    <div id="similar-movies"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get movie ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieId = urlParams.get('id');
+
+            if (!movieId) {
+                alert('No movie selected');
+                window.location.href = 'movies.html';
+                return;
+            }
+
+            // Fetch movie details
+            fetch(`api/movies/read_one.php?id=${movieId}`)
+                .then(response => response.json())
+                .then(movie => {
+                    // Update poster
+                    const posterDiv = document.getElementById('movie-poster');
+                    posterDiv.innerHTML = `
+                        <img src="${movie.poster_image}" alt="${movie.title_en}">
+                    `;
+
+                    // Update movie info
+                    const movieInfoDiv = document.getElementById('movie-info');
+                    movieInfoDiv.innerHTML = `
+                        <h1>${movie.title_en}</h1>
+                        <p><strong>Category:</strong> ${movie.category}</p>
+                        <p><strong>Description:</strong> ${movie.description_en}</p>
+                        <p><strong>Release Year:</strong> ${movie.release_year}</p>
+                        <p><strong>Duration:</strong> ${movie.duration} minutes</p>
+                        <a href="${movie.video_file}" class="watch-btn" target="_blank">Watch Now</a>
+                    `;
+
+                    // Similar movies section
+                    fetchSimilarMovies(movie.category, movieId);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to load movie details');
+                });
+
+            function fetchSimilarMovies(category, currentMovieId) {
+                fetch(`api/movies/read.php?category=${category}&exclude=${currentMovieId}&limit=4`)
+                    .then(response => response.json())
+                    .then(movies => {
+                        const similarMoviesDiv = document.getElementById('similar-movies');
+                        similarMoviesDiv.innerHTML = '<h2>Similar Movies</h2>';
+                        
+                        movies.forEach(movie => {
+                            const movieCard = document.createElement('div');
+                            movieCard.classList.add('similar-movie-card');
+                            movieCard.innerHTML = `
+                                <img src="${movie.poster_image}" alt="${movie.title_en}">
+                                <h3>${movie.title_en}</h3>
+                                <a href="movie-detail.html?id=${movie.movie_id}" class="btn">View Details</a>
+                            `;
+                            similarMoviesDiv.appendChild(movieCard);
+                        });
+                    });
+            }
+        });
+    </script>
+    <script src="js/loader.js"></script>
+</body>
+</html>

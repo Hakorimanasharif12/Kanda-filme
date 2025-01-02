@@ -6,8 +6,100 @@
     <title>Kanda Filme - Watch Movies Online</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Loader Styles */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .loader {
+            width: 100px;
+            height: 100px;
+            border: 10px solid #f3f3f3;
+            border-top: 10px solid red;
+            border-bottom: 10px solid red;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+        .loader::before, .loader::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 10px solid transparent;
+            border-top: 10px solid red;
+            border-bottom: 10px solid red;
+            border-radius: 50%;
+        }
+        .loader::before {
+            transform: rotate(60deg);
+        }
+        .loader::after {
+            transform: rotate(-60deg);
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <style>
+        .slideshow {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+        .slide-show {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slide-content {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            color: white;
+            background: rgba(0,0,0,0.6);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+        }
+    </style>
 </head>
 <body>
+    <!-- Loader -->
+    <div class="loader-overlay" id="loader">
+        <div class="loader"></div>
+    </div>
+
     <!-- Header with Language Selector -->
     <header>
         <nav>
@@ -37,30 +129,7 @@
     <!-- Hero Section with Slideshow -->
     <section class="hero">
         <div class="slideshow">
-            <div class="slide active">
-                <img src="images/movie1.jpg" alt="Movie 1">
-                <div class="slide-content">
-                    <h2>Black Panther: Wakanda Forever</h2>
-                    <p data-translate="movie1Desc">Experience the next chapter of the Wakandan legacy</p>
-                    <button class="watch-now" data-translate="watchNow">Watch Now</button>
-                </div>
-            </div>
-            <div class="slide">
-                <img src="images/movie2.jpg" alt="Movie 2">
-                <div class="slide-content">
-                    <h2>Avengers: Endgame</h2>
-                    <p data-translate="movie2Desc">The epic conclusion to the Infinity Saga</p>
-                    <button class="watch-now" data-translate="watchNow">Watch Now</button>
-                </div>
-            </div>
-            <div class="slide">
-                <img src="images/movie3.jpg" alt="Movie 3">
-                <div class="slide-content">
-                    <h2>Spider-Man: No Way Home</h2>
-                    <p data-translate="movie3Desc">The multiverse unleashed</p>
-                    <button class="watch-now" data-translate="watchNow">Watch Now</button>
-                </div>
-            </div>
+            <div class="slide-show"></div>
             <button class="slide-arrow prev"><i class="fas fa-chevron-left"></i></button>
             <button class="slide-arrow next"><i class="fas fa-chevron-right"></i></button>
         </div>
@@ -117,7 +186,7 @@
                 <h3 data-translate="contactUs">Contact Us</h3>
                 <ul>
                     <li><i class="fas fa-envelope"></i> <span data-translate="email">info@kandafilme.com</span></li>
-                    <li><i class="fas fa-phone"></i> <span data-translate="phone">+250 123 456 789</span></li>
+                    <li><i class="fas fa-phone"></i> <a href="tel:0798388890">0798388890</a></li>
                     <li><i class="fas fa-map-marker-alt"></i> <span data-translate="address">Kigali, Rwanda</span></li>
                 </ul>
             </div>
@@ -127,6 +196,65 @@
         </div>
     </footer>
 
+    <!-- WhatsApp Chat Button -->
+    <div class="whatsapp-chat">
+        <a href="https://wa.me/+258798388890?text=I%20want%20to%20know%20more%20about%20Kanda%20Filme" 
+           target="_blank" 
+           class="whatsapp-btn">
+            <i class="fab fa-whatsapp"></i> Chat with Us
+        </a>
+    </div>
+
+    <script>
+        // Hide loader when page is fully loaded
+        window.addEventListener('load', () => {
+            document.getElementById('loader').style.display = 'none';
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fetch featured movies for slide show
+            fetch('api/movies/read_featured.php')
+                .then(response => response.json())
+                .then(movies => {
+                    const slideShowContainer = document.querySelector('.slide-show');
+                    slideShowContainer.innerHTML = ''; // Clear existing slides
+
+                    movies.forEach((movie, index) => {
+                        const slide = document.createElement('div');
+                        slide.classList.add('slide');
+                        if (index === 0) slide.classList.add('active');
+
+                        slide.innerHTML = `
+                            <img src="${movie.poster_image}" alt="${movie.title_en}" style="width: 100%; height: 500px; object-fit: cover;">
+                            <div class="slide-content">
+                                <h2>${movie.title_en}</h2>
+                                <p>${movie.description_en.substring(0, 150)}...</p>
+                                <a href="movie-detail.html?id=${movie.movie_id}" class="btn btn-primary">Watch Now</a>
+                            </div>
+                        `;
+
+                        slideShowContainer.appendChild(slide);
+                    });
+
+                    // Slide show auto-rotation
+                    let currentSlide = 0;
+                    const slides = document.querySelectorAll('.slide');
+
+                    function nextSlide() {
+                        slides[currentSlide].classList.remove('active');
+                        currentSlide = (currentSlide + 1) % slides.length;
+                        slides[currentSlide].classList.add('active');
+                    }
+
+                    setInterval(nextSlide, 5000); // Change slide every 5 seconds
+                })
+                .catch(error => {
+                    console.error('Error fetching featured movies:', error);
+                });
+        });
+    </script>
+    <script src="js/loader.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>

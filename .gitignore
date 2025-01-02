@@ -1,17 +1,54 @@
-# PHP files
-*.log
-*.tmp
+# Uploads directory
+uploads/posters/*
+uploads/videos/*
+!uploads/posters/.gitkeep
+!uploads/videos/.gitkeep
 
-# OS generated files
+# PHP Specific
+*.log
+*.cache
+
+# Database Credentials
+config/database.php
+
+# Operating System Files
 .DS_Store
 Thumbs.db
 
-# Editor directories and files
-.idea/
+# IDE Files
 .vscode/
-*.swp
-*.swo
+.idea/
+*.sublime-project
+*.sublime-workspace
 
-# Dependency directories
+# Composer
 vendor/
+composer.lock
+
+# Environment Files
+.env
+.env.local
+.env.development
+.env.production
+
+# Temporary Files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Security
+*.key
+*.pem
+
+# Dependency Directories
 node_modules/
+bower_components/
+
+# Compiled Sources
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
